@@ -14,6 +14,8 @@ func Get(format string) (Formatter, error) {
 		return Stylish, nil
 	case "plain":
 		return Plain, nil
+	case "json":
+		return JSON, nil
 	default:
 		return nil, fmt.Errorf("unknown format %q", format)
 	}
