@@ -38,6 +38,13 @@ func TestGenDiff(t *testing.T) {
 			format:   "",
 			expected: "expected_stylish.txt",
 		},
+		{
+			name:     "plain format",
+			file1:    "file1.json",
+			file2:    "file2.json",
+			format:   "plain",
+			expected: "expected_plain.txt",
+		},
 	}
 
 	for _, tt := range tests {
