@@ -2,10 +2,9 @@ package code
 
 import (
 	"fmt"
-	"maps"
-	"slices"
-	"strings"
 
+	"code/differ"
+	"code/formatters"
 	"code/parsers"
 )
 
@@ -20,33 +19,21 @@ func GenDiff(filepath1, filepath2, format string) (string, error) {
 		return "", err
 	}
 
-	return buildDiff(data1, data2), nil
+	nodes := differ.Diff(data1, data2)
+
+	formatter, err := getFormatter(format)
+	if err != nil {
+		return "", err
+	}
+
+	return formatter(nodes), nil
 }
 
-func buildDiff(data1, data2 map[string]any) string {
-	keys := append(slices.Collect(maps.Keys(data1)), slices.Collect(maps.Keys(data2))...)
-	slices.Sort(keys)
-	keys = slices.Compact(keys)
-
-	var diff strings.Builder
-	diff.WriteString("{\n")
-	for _, key := range keys {
-		value1, in1 := data1[key]
-		value2, in2 := data2[key]
-
-		switch {
-		case !in2:
-			fmt.Fprintf(&diff, "  - %s: %v\n", key, value1)
-		case !in1:
-			fmt.Fprintf(&diff, "  + %s: %v\n", key, value2)
-		case value1 == value2:
-			fmt.Fprintf(&diff, "    %s: %v\n", key, value1)
-		default:
-			fmt.Fprintf(&diff, "  - %s: %v\n", key, value1)
-			fmt.Fprintf(&diff, "  + %s: %v\n", key, value2)
-		}
+func getFormatter(format string) (func([]differ.Node) string, error) {
+	switch format {
+	case "", "stylish":
+		return formatters.Stylish, nil
+	default:
+		return nil, fmt.Errorf("unknown format %q", format)
 	}
-	diff.WriteString("}")
-
-	return diff.String()
 }

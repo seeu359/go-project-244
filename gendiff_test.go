@@ -9,35 +9,34 @@ import (
 
 const fixturePath = "testdata/fixture"
 
-func TestGenDiffFlat(t *testing.T) {
+func TestGenDiff(t *testing.T) {
 	tests := []struct {
-		name         string
-		file1, file2 string
-		expected     string
+		name     string
+		file1    string
+		file2    string
+		format   string
+		expected string
 	}{
 		{
-			name:     "json removed, added and changed keys",
+			name:     "nested json, stylish",
 			file1:    "file1.json",
 			file2:    "file2.json",
-			expected: "expected_flat.txt",
+			format:   "stylish",
+			expected: "expected_stylish.txt",
 		},
 		{
-			name:     "json identical files",
-			file1:    "file1.json",
-			file2:    "file1.json",
-			expected: "expected_identical.txt",
-		},
-		{
-			name:     "yaml removed, added and changed keys",
+			name:     "nested yaml, stylish",
 			file1:    "file1.yml",
 			file2:    "file2.yml",
-			expected: "expected_flat.txt",
+			format:   "stylish",
+			expected: "expected_stylish.txt",
 		},
 		{
-			name:     "yaml identical files",
-			file1:    "file1.yml",
-			file2:    "file1.yml",
-			expected: "expected_identical.txt",
+			name:     "default format is stylish",
+			file1:    "file1.json",
+			file2:    "file2.json",
+			format:   "",
+			expected: "expected_stylish.txt",
 		},
 	}
 
@@ -48,7 +47,7 @@ func TestGenDiffFlat(t *testing.T) {
 			got, err := GenDiff(
 				filepath.Join(fixturePath, tt.file1),
 				filepath.Join(fixturePath, tt.file2),
-				"stylish",
+				tt.format,
 			)
 			if err != nil {
 				t.Fatalf("GenDiff() unexpected error: %v", err)
@@ -82,6 +81,17 @@ func TestGenDiffErrors(t *testing.T) {
 				t.Error("GenDiff() expected error, got nil")
 			}
 		})
+	}
+}
+
+func TestGenDiffUnknownFormat(t *testing.T) {
+	_, err := GenDiff(
+		filepath.Join(fixturePath, "file1.json"),
+		filepath.Join(fixturePath, "file2.json"),
+		"bogus",
+	)
+	if err == nil {
+		t.Error("GenDiff() expected error for unknown format, got nil")
 	}
 }
 
