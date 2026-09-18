@@ -16,15 +16,27 @@ func TestGenDiffFlat(t *testing.T) {
 		expected     string
 	}{
 		{
-			name:     "removed, added and changed keys",
+			name:     "json removed, added and changed keys",
 			file1:    "file1.json",
 			file2:    "file2.json",
 			expected: "expected_flat.txt",
 		},
 		{
-			name:     "identical files",
+			name:     "json identical files",
 			file1:    "file1.json",
 			file2:    "file1.json",
+			expected: "expected_identical.txt",
+		},
+		{
+			name:     "yaml removed, added and changed keys",
+			file1:    "file1.yml",
+			file2:    "file2.yml",
+			expected: "expected_flat.txt",
+		},
+		{
+			name:     "yaml identical files",
+			file1:    "file1.yml",
+			file2:    "file1.yml",
 			expected: "expected_identical.txt",
 		},
 	}
@@ -57,6 +69,7 @@ func TestGenDiffErrors(t *testing.T) {
 		{"missing second file", "file1.json", "missing.json"},
 		{"unsupported extension", "note.txt", "file1.json"},
 		{"invalid json", "invalid.json", "file1.json"},
+		{"invalid yaml", "invalid.yml", "file1.yml"},
 	}
 
 	for _, tt := range tests {
