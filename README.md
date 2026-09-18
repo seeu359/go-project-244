@@ -1,6 +1,7 @@
 # Вычислитель отличий на Go
 
 [![hexlet-check](https://github.com/seeu359/go-project-244/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/seeu359/go-project-244/actions)
+[![ci](https://github.com/seeu359/go-project-244/actions/workflows/ci.yml/badge.svg)](https://github.com/seeu359/go-project-244/actions/workflows/ci.yml)
 
 Консольная утилита для сравнения вложенных структур (JSON, YAML)
 
@@ -22,7 +23,28 @@ cd go-project-244
 
 ## Использование
 
-<!-- Добавьте примеры запуска и запись asciinema — именно это смотрит работодатель -->
+```bash
+# сборка
+make build
+
+# сравнение файлов
+./bin/gendiff file1.json file2.json
+```
+
+Вывод:
+
+```
+{
+  - follow: false
+    host: hexlet.io
+  - proxy: 123.234.53.22
+  - timeout: 50
+  + timeout: 20
+  + verbose: true
+}
+```
+
+<!-- TODO: добавить запись asciinema — [![asciicast](https://asciinema.org/a/ID.svg)](https://asciinema.org/a/ID) -->
 
 ---
 
